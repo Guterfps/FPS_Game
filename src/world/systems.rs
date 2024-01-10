@@ -1,5 +1,6 @@
 
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
 use super::components::*;
 
@@ -16,15 +17,23 @@ pub fn spawn_world(
             transform: Transform::from_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
             ..default()
         },
-    ));
+    )).with_children(|parent| {
+        parent.spawn((
+        Collider::cylinder(0.0, 10.0),
+        RigidBody::Fixed,
+        TransformBundle::from(Transform::from_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2))),
+        ));
+    });
     // cube
     commands.spawn((
         PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
+            mesh: meshes.add(Mesh::from(shape::Cube { size: 2.0 })),
             material: materials.add(Color::rgb_u8(124, 144, 255).into()),
-            transform: Transform::from_xyz(0.0, 0.5, 0.0),
+            transform: Transform::from_xyz(0.0, 1.0, 0.0),
             ..default()
         },
+        Collider::cuboid(1.0, 1.0, 1.0),
+        RigidBody::Fixed,
     ));
     // light
     commands.spawn(PointLightBundle {

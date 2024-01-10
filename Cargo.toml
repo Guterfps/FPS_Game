@@ -9,4 +9,4 @@ edition = "2021"
 # Remember to remove "dynamic_linking" before releasing your game!
 bevy = { version = "0.12.1", features = ["dynamic_linking"] }
 
-#bevy_rapier3d = { version = "0.23.0", features = [ "simd-stable", "parallel", "wasm-bindgen" ] }
+bevy_rapier3d = { version = "0.23.0", features = [ "simd-stable", "parallel", "wasm-bindgen", "debug-render-3d" ] }
