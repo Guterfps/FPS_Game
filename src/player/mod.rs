@@ -14,9 +14,9 @@ impl Plugin for PlayerPlugin {
         .add_systems(Startup, spawn_player)
         .add_systems(Update, (
             update_player_rotation,
-            update_player_position
+            update_player_position,
+            update_player_grounded,
             )
-        )
-        ;
+        );
     }
 }
