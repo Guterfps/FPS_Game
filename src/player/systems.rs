@@ -48,7 +48,7 @@ pub fn update_player_rotation(
     }
 }
 
-pub fn update_player_position(
+pub fn update_player_movment(
     mut player_query: Query<
                 (&mut KinematicCharacterController, &mut Player), With<Player>>,
     player_camera_query: Query<&Transform, With<PlayerCamera>>,
@@ -86,7 +86,6 @@ pub fn update_player_position(
             let time_delta = time.delta_seconds();
             let mut movment_translation = player.speed * time_delta;
             movment_translation.y = calc_player_y_movment(&player, time_delta);
-            player.speed.y = calc_player_y_speed(&player, time_delta);
             
             controller.translation = Some(movment_translation);
         }
@@ -110,11 +109,14 @@ pub fn update_player_speed(
     for mut player in player_query.iter_mut() {
         player.speed = player.speed.clamp_length_max(MAX_MOVMENT_SPEED);
         
+        let delta_time = time.delta_seconds();
+        
         if player.is_grounded {
             let direction = player.speed.xz().normalize_or_zero();
-            let delta_time = time.delta_seconds();
             player.speed.x -= direction.x * MOVMENT_SPEED_SLOW_DOWN * delta_time;
             player.speed.z -= direction.y * MOVMENT_SPEED_SLOW_DOWN * delta_time;
+        } else {
+            player.speed.y = calc_player_y_speed(&player, delta_time);
         }
     }
 }

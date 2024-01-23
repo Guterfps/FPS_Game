@@ -25,7 +25,7 @@ impl Plugin for PlayerPlugin {
         .add_systems(Startup, spawn_player)
         .add_systems(Update, (
             (update_player_rotation,
-            update_player_position).in_set(PlayerSystemSet::Movment),
+            update_player_movment).in_set(PlayerSystemSet::Movment),
             (update_player_grounded, 
             update_player_speed).in_set(PlayerSystemSet::Confinement),
             )
