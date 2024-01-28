@@ -85,7 +85,8 @@ pub fn update_player_movment(
             
             let time_delta = time.delta_seconds();
             let mut movment_translation = player.speed * time_delta;
-            movment_translation.y = calc_player_y_movment(&player, time_delta);
+            movment_translation.y = 
+                calc_y_movment(player.speed.y, time_delta);
             
             controller.translation = Some(movment_translation);
         }
@@ -112,19 +113,24 @@ pub fn update_player_speed(
         let delta_time = time.delta_seconds();
         
         if player.is_grounded {
-            let direction = player.speed.xz().normalize_or_zero();
-            player.speed.x -= direction.x * MOVMENT_SPEED_SLOW_DOWN * delta_time;
-            player.speed.z -= direction.y * MOVMENT_SPEED_SLOW_DOWN * delta_time;
+            let direction_x = player.speed.x.signum();
+            let direction_z = player.speed.z.signum();
+            let speed_slow_down = MOVMENT_SPEED_SLOW_DOWN * delta_time;
+            
+            player.speed.x -= direction_x * speed_slow_down.min(player.speed.x.abs());
+            player.speed.z -= direction_z * speed_slow_down.min(player.speed.z.abs());
+            player.speed.y = 0.0;
+
         } else {
-            player.speed.y = calc_player_y_speed(&player, delta_time);
+            player.speed.y = calc_y_speed(player.speed.y, delta_time);
         }
     }
 }
 
-fn calc_player_y_movment(player: &Player, time_delta: f32) -> f32 {
-    (player.speed.y * time_delta) + (GRAVITY * time_delta * time_delta / 2.0)
+fn calc_y_movment(init_speed: f32, time_delta: f32) -> f32 {
+    (init_speed * time_delta) + (GRAVITY * time_delta * time_delta / 2.0)
 }
 
-fn calc_player_y_speed(player: &Player, time_delta: f32) -> f32 {
-    player.speed.y + (GRAVITY * time_delta)
+fn calc_y_speed(init_speed: f32, time_delta: f32) -> f32 {
+    init_speed + (GRAVITY * time_delta)
 }

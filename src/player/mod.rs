@@ -27,7 +27,7 @@ impl Plugin for PlayerPlugin {
             (update_player_rotation,
             update_player_movment).in_set(PlayerSystemSet::Movment),
             (update_player_grounded, 
-            update_player_speed).in_set(PlayerSystemSet::Confinement),
+            update_player_speed).chain().in_set(PlayerSystemSet::Confinement),
             )
         );
     }
